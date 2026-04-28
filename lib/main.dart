@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rick_and_morty/core/config/di.dart';
 import 'package:rick_and_morty/modules/all_characters/presentation/all_characters_screen.dart';
 
 void main() {
+  configureDependencies();
   runApp(const MyApp());
 }
 
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Rick and Morty App',
 
-      home: const AllCharactersListScreen(),
+      home: AllCharactersListScreen(),
     );
   }
 }

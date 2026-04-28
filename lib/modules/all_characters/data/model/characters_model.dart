@@ -21,7 +21,7 @@ class CharactersListInfo {
   }
 }
 
-class Character {
+class CharactersModel {
   final int id;
   final String name;
   final String status;
@@ -32,7 +32,7 @@ class Character {
   final String image;
   final DateTime created;
 
-  Character({
+  CharactersModel({
     required this.id,
     required this.name,
     required this.status,
@@ -44,8 +44,8 @@ class Character {
     required this.gender,
   });
 
-  factory Character.fromMap(Map<String, dynamic> map) {
-    return Character(
+  factory CharactersModel.fromMap(Map<String, dynamic> map) {
+    return CharactersModel(
       id: map['id'] ?? 0,
       name: map['name'] ?? '',
       status: map['status'] ?? '',

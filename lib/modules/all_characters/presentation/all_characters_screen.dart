@@ -1,58 +1,101 @@
 import 'package:flutter/material.dart';
-import '../domain/entity/characters_entity.dart';
-import '../domain/usecase/get_all_characters_usecase.dart';
-import '../../../core/service/dio_client.dart';
-import '../data/repository_impl/charaters_repository_impl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_and_morty/core/config/di.dart';
+import 'package:rick_and_morty/modules/all_characters/presentation/bloc/characters_bloc.dart';
+import 'package:rick_and_morty/modules/all_characters/presentation/bloc/characters_event.dart';
+import 'package:rick_and_morty/modules/all_characters/presentation/bloc/characters_state.dart';
 
-class AllCharactersListScreen extends StatefulWidget {
-  const AllCharactersListScreen({super.key});
+class AllCharactersListScreen extends StatelessWidget {
+  AllCharactersListScreen({super.key});
 
-  @override
-  State<AllCharactersListScreen> createState() =>
-      _AllCharactersListScreenState();
-}
-
-class _AllCharactersListScreenState extends State<AllCharactersListScreen> {
-  late Future<List<CharactersEntity>> _characterList;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final networkService = NetworkService();
-    final repository = CharacterRepositoryImpl(networkService.dio);
-    final useCase = GetCharactersUseCase(repository);
-
-    _characterList = useCase.call();
-  }
+  final _isGridViewValue = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('All Characters')),
-      body: FutureBuilder<List<CharactersEntity>>(
-        future: _characterList,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data?.length ?? 0,
-              itemBuilder: (context, index) {
-                final item = snapshot.data![index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(item.image),
-                  ),
-                  title: Text(item.name),
-                  subtitle: Text(item.status),
-                );
+    return BlocProvider(
+      create: (context) => getIt<CharactersBloc>()..add(LoadCharactersEvent()),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('All Characters')),
+        body: Column(
+          children: [
+            IconButton(
+              onPressed: () {
+                _isGridViewValue.value = !_isGridViewValue.value;
               },
-            );
-          }
-          return const Center(child: Text('No data'));
-        },
+              icon: const Icon(Icons.grid_view),
+            ),
+            Expanded(
+              child: Builder(
+                builder: (context) {
+                  final bloc = context.read<CharactersBloc>();
+
+                  return StreamBuilder<BlocState>(
+                    stream: bloc.stream,
+                    initialData: bloc.state,
+                    builder: (context, snapshot) {
+                      final state = snapshot.data;
+                      if (state is BlocLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      if (state is BlocSuccess) {
+                        return ValueListenableBuilder<bool>(
+                          valueListenable: _isGridViewValue,
+                          builder: (context, isGridView, child) {
+                            if (isGridView) {
+                              return GridView.builder(
+                                padding: const EdgeInsets.all(16),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 15,
+                                      crossAxisSpacing: 15,
+                                    ),
+                                itemCount: state.characters.length,
+                                itemBuilder: (context, index) {
+                                  final char = state.characters[index];
+                                  return GridTile(
+                                    footer: GridTileBar(
+                                      backgroundColor: Colors.black54,
+                                      title: Text(char.name),
+                                    ),
+                                    child: Image.network(
+                                      char.image,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+
+                            return ListView.builder(
+                              itemCount: state.characters.length,
+                              itemBuilder: (context, index) {
+                                final char = state.characters[index];
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(char.image),
+                                  ),
+                                  title: Text(char.name),
+                                  subtitle: Text(char.status),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
+
+                      if (state is BlocError) {
+                        return Center(child: Text(state.message));
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

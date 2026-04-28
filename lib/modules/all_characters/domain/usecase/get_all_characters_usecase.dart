@@ -1,6 +1,8 @@
-import '../entity/characters_entity.dart';
-import '../repository/characters_domain_repository.dart';
+import 'package:injectable/injectable.dart';
+import 'package:rick_and_morty/modules/all_characters/domain/entity/characters_entity.dart';
+import 'package:rick_and_morty/modules/all_characters/domain/repository/characters_domain_repository.dart';
 
+@injectable
 class GetCharactersUseCase {
   final CharactersDomainRepository repository;
   GetCharactersUseCase(this.repository);
