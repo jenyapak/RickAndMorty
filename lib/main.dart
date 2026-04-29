@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rick_and_morty/core/config/di.dart';
-import 'package:rick_and_morty/modules/all_characters/presentation/all_characters_screen.dart';
+import 'package:rick_and_morty/main_builder.dart';
+import 'package:rick_and_morty/providers/app_theme_provider.dart';
+import 'package:rick_and_morty/providers/localization_provider.dart';
 
 void main() {
   configureDependencies();
@@ -12,11 +15,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Rick and Morty App',
-
-      home: AllCharactersListScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppThemeProvider()),
+        ChangeNotifierProvider(create: (_) => LocalizationProvider()),
+      ],
+      child: const MainBuilder(),
     );
   }
 }
