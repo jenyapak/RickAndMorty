@@ -1,5 +1,6 @@
 {
     "@@locale": "ru",
-    "allCharacters": "Все персонажи",
-    "changeTheme": "Сменить тему"
+    "allCharacters": "Всего персонажей",
+    "changeTheme": "Сменить тему",
+    "findCharacter": "Найти персонажа"
 }

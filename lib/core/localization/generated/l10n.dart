@@ -54,10 +54,10 @@ class Language {
     return Localizations.of<Language>(context, Language);
   }
 
-  /// `All Characters`
+  /// `All characters`
   String get allCharacters {
     return Intl.message(
-      'All Characters',
+      'All characters',
       name: 'allCharacters',
       desc: '',
       args: [],
@@ -69,6 +69,16 @@ class Language {
     return Intl.message(
       'Change theme',
       name: 'changeTheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Find сharacter`
+  String get findCharacter {
+    return Intl.message(
+      'Find сharacter',
+      name: 'findCharacter',
       desc: '',
       args: [],
     );

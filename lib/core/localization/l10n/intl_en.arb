@@ -1,5 +1,7 @@
 {
     "@@locale": "en",
-    "allCharacters": "All Characters",
-    "changeTheme": "Change theme"
+    "allCharacters": "All characters",
+    "changeTheme": "Change theme",
+    "findCharacter": "Find сharacter"
+    
 }

@@ -20,6 +20,8 @@ class CharacterRepositoryImpl implements CharactersDomainRepository {
         name: model.name,
         status: model.status,
         image: model.image,
+        species: model.species,
+        gender: model.gender,
       );
     }).toList();
   }

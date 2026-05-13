@@ -28,11 +28,7 @@ class MainBuilder extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         Language.delegate,
       ],
-      supportedLocales: [
-        Locale('en'), // English
-        Locale('ky'),
-        Locale('ru'), // Spanish
-      ],
+      supportedLocales: [Locale('en'), Locale('ky'), Locale('ru')],
     );
   }
 }
